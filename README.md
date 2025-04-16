@@ -161,7 +161,7 @@ Your Trap should be private now with your operator address whitelisted internall
 
 ---
 
-## 2. Install Operator CLI
+## 2. Operator CLI
 ```bash
 cd ~
 ```
@@ -186,7 +186,6 @@ drosera-operator
 
 ## 3. Install Docker image
 ```
-# Optional: we don't install using docker
 docker pull ghcr.io/drosera-network/drosera-operator:latest
 ```
 
@@ -200,11 +199,79 @@ drosera-operator register --eth-rpc-url https://ethereum-holesky-rpc.publicnode.
 
 ---
 
-## 5. Create Operator systemd
+## 5. Open Ports
+```bash
+# Enable firewall
+sudo ufw allow ssh
+sudo ufw allow 22
+sudo ufw enable
+
+# Allow Drosera ports
+sudo ufw allow 31313/tcp
+sudo ufw allow 31314/tcp
+```
+
+---
+
+## 6. Install & Run Operator
+**Choose one Installation Method:**
+* Method 1: Install using Docker
+* Method 2: Install using SystemD
+
+## Method 1: Docker
+### 6-1-1: Configure Docker
+Make sure you have installed `Docker` in Dependecies step.
+```
+git clone https://github.com/0xmoei/Drosera-Network
+```
+```
+cd Drosera-Network
+```
+```
+cp .env.example .env
+```
+Edit `.env` file.
+```
+nano .env
+```
+* Replace `your_evm_private_key` and `your_vps_public_ip`
+
+### 6-1-2: Run Operator
+```
+docker compose up -d
+```
+
+### 6-1-3: Check health
+```
+cd Drosera-Network
+docker compose logs -f
+```
+
+![image](https://github.com/user-attachments/assets/2ec4d181-ac60-4702-b4f4-9722ef275b50)
+
+>  No problem if you are receiveing `WARN drosera_services::network::service: Failed to gossip message: InsufficientPeers`
+
+### 6-1-4: Optional commands
+```console
+# Stop node
+cd Drosera-Network
+docker compose down -v
+
+# Restart node
+cd Drosera-Network
+docker compose up -d
+```
+
+**Now running your node using `Docker`, you can Jump to step 7.**
+
+---
+
+## Method 2: SystemD
+### 6-2-1: Configure SystemD service file
 Enter this command in the terminal, But first replace:
 * `PV_KEY` with your `privatekey`
 * `VPS_IP` with your solid vps IP (without anything else)
-* if using a `local` system, then replace vps ip with `localhost`
+* if using a `local` system, then replace vps ip with `0.0.0.0`
 ```bash
 sudo tee /etc/systemd/system/drosera.service > /dev/null <<EOF
 [Unit]
@@ -230,23 +297,7 @@ WantedBy=multi-user.target
 EOF
 ```
 
----
-
-## 6. Open Ports
-```bash
-# Enable firewall
-sudo ufw allow ssh
-sudo ufw allow 22
-sudo ufw enable
-
-# Allow Drosera ports
-sudo ufw allow 31313/tcp
-sudo ufw allow 31314/tcp
-```
-
----
-
-## 7. Run Operator
+### 6-2-2: Run Operator
 ```console
 # reload systemd
 sudo systemctl daemon-reload
@@ -256,20 +307,16 @@ sudo systemctl enable drosera
 sudo systemctl start drosera
 ```
 
----
-
-## 8. Check Node Health
-```
+### 6-2-3: Check Node Health
+```console
 journalctl -u drosera.service -f
 ```
 
 ![image](https://github.com/user-attachments/assets/a4ad6e66-4749-4780-9347-c878399d4067)
 
-**!! No problem if you are receiveing `WARN drosera_services::network::service: Failed to gossip message: InsufficientPeers`**
+> !! No problem if you are receiveing `WARN drosera_services::network::service: Failed to gossip message: InsufficientPeers`
 
----
-
-### Optional commands
+### 6-2-4: Optional commands
 ```console
 # Stop node
 sudo systemctl stop drosera
@@ -277,17 +324,17 @@ sudo systemctl stop drosera
 # Restart node
 sudo systemctl restart drosera
 ```
-
+**Now running your node using `SystemD`, you can Jump to step 7.**
 ---
 
-## 9. Opt-in Trap
+## 7. Opt-in Trap
 In the dashboard., Click on `Opti in` to connect your operator to the Trap
 
 ![image](https://github.com/user-attachments/assets/5189b5cb-cb46-4d10-938a-33f71951dfc2)
 
 ---
 
-## 10. Check Node Liveness
+## 8. Check Node Liveness
 Your node will start producing greeen blocks in the dashboard
 
 ![image](https://github.com/user-attachments/assets/9ad08265-0ea4-49f7-85e5-316677245254)
