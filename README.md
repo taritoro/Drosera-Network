@@ -220,7 +220,13 @@ sudo ufw allow 31314/tcp
 
 ## Method 1: Docker
 ### 6-1-1: Configure Docker
-Make sure you have installed `Docker` in Dependecies step.
+* Make sure you have installed `Docker` in Dependecies step.
+
+If you are currently running as old systemd method, stop it.
+```
+sudo systemctl stop drosera
+sudo systemctl disable drosera
+```
 ```
 git clone https://github.com/0xmoei/Drosera-Network
 ```
@@ -251,7 +257,7 @@ docker compose logs -f
 
 >  No problem if you are receiveing `WARN drosera_services::network::service: Failed to gossip message: InsufficientPeers`
 
-### 6-1-4: Optional commands
+### 6-1-4: Optional Docker commands
 ```console
 # Stop node
 cd Drosera-Network
