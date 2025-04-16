@@ -222,7 +222,7 @@ sudo ufw allow 31314/tcp
 ### 6-1-1: Configure Docker
 * Make sure you have installed `Docker` in Dependecies step.
 
-If you are currently running as old systemd method, stop it.
+If you are currently running via old `systemd` method, stop it:
 ```
 sudo systemctl stop drosera
 sudo systemctl disable drosera
