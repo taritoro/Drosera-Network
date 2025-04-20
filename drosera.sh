@@ -22,7 +22,6 @@ Follow me on X: https://x.com/0xMoei
 Follow me on Github: https://github.com/0xmoei
 EOF
 echo -e "\e[0m"
-echo "To get started, you'll need a Testnet Holesky Ethereum RPC. Grab one from https://dashboard.alchemy.com/ (or press Enter to use the default)."
 echo ""
 
 # Prompt for EVM private key
@@ -36,7 +35,7 @@ EVM_PUBLIC_ADDRESS=$(derive_address_from_private_key "$EVM_PRIVATE_KEY")
 echo "Public address derived: $EVM_PUBLIC_ADDRESS"
 
 # Prompt for Testnet Holesky Ethereum RPC immediately after EVM private key
-read -p "Enter your Testnet Holesky Ethereum RPC (or press Enter to use default): " ETH_RPC_URL
+read -p "Enter your Testnet Holesky Ethereum RPC, Grab one from https://dashboard.alchemy.com/ (or press Enter to use default): " ETH_RPC_URL
 if [ -z "$ETH_RPC_URL" ] || ! curl --output /dev/null --silent --head --fail "$ETH_RPC_URL"; then
     echo "Invalid RPC URL or skipped. Using default RPC: https://ethereum-holesky-rpc.publicnode.com"
     ETH_RPC_URL="https://ethereum-holesky-rpc.publicnode.com"
