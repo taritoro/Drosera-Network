@@ -128,8 +128,18 @@ drosera dryrun --eth-rpc-url "$ETH_RPC_URL"
 # Step 7: Whitelist Operator
 echo -e "\n\e[1;33mStep 7: Whitelisting Operator...\e[0m"
 echo "Configuring your trap to allow your operator."
-echo "private_trap = true" >> drosera.toml
-echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
+# Check if private_trap exists; update or append
+if grep -q "private_trap" drosera.toml; then
+    sed -i "s/private_trap =.*/private_trap = true/" drosera.toml
+else
+    echo "private_trap = true" >> drosera.toml
+fi
+# Check if whitelist exists; update or append
+if grep -q "whitelist" drosera.toml; then
+    sed -i "s|whitelist =.*|whitelist = [\"$EVM_PUBLIC_ADDRESS\"]|" drosera.toml
+else
+    echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
+fi
 echo "ofc" | DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
 
 # Step 8: Install Operator CLI
