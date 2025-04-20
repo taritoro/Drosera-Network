@@ -16,7 +16,8 @@ Built by:
  / _ \__  _|  \/  | ___   ___(_)
 | | | \ \/ / |\/| |/ _ \ / _ \ |
 | |_| |>  <| |  | | (_) |  __/ |
- \___//_/\_\_|  |_|\___/ \___|_|         
+ \___//_/\_\_|  |_|\___/ \___|_|        
+ 
 Follow me on X: https://x.com/0xMoei
 Follow me on Github: https://github.com/0xmoei
 EOF
@@ -34,20 +35,20 @@ echo "Deriving your public address in the background..."
 EVM_PUBLIC_ADDRESS=$(derive_address_from_private_key "$EVM_PRIVATE_KEY")
 echo "Public address derived: $EVM_PUBLIC_ADDRESS"
 
-# Prompt for VPS public IP
-read -p "Enter your VPS public IP: " VPS_IP
-if [ -z "$VPS_IP" ]; then
-    echo "Error: VPS public IP is required. Exiting."
-    exit 1
-fi
-
-# Prompt for Testnet Holesky Ethereum RPC
+# Prompt for Testnet Holesky Ethereum RPC immediately after EVM private key
 read -p "Enter your Testnet Holesky Ethereum RPC (or press Enter to use default): " ETH_RPC_URL
 if [ -z "$ETH_RPC_URL" ] || ! curl --output /dev/null --silent --head --fail "$ETH_RPC_URL"; then
     echo "Invalid RPC URL or skipped. Using default RPC: https://ethereum-holesky-rpc.publicnode.com"
     ETH_RPC_URL="https://ethereum-holesky-rpc.publicnode.com"
 else
     echo "Using provided RPC URL: $ETH_RPC_URL"
+fi
+
+# Prompt for VPS public IP
+read -p "Enter your VPS public IP: " VPS_IP
+if [ -z "$VPS_IP" ]; then
+    echo "Error: VPS public IP is required. Exiting."
+    exit 1
 fi
 
 # Step 1: Install Dependencies
@@ -96,7 +97,7 @@ git config --global user.name "DroseraUser"
 forge init -t drosera-network/trap-foundry-template
 bun install
 forge build
-DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --rpc-url "$ETH_RPC_URL"
 TRAP_ADDRESS=$(grep 'address =' drosera.toml | awk '{print $3}')
 echo "Trap deployed! Address: $TRAP_ADDRESS"
 
@@ -104,19 +105,19 @@ echo "Trap deployed! Address: $TRAP_ADDRESS"
 echo -e "\n\e[1;33mStep 5: Bloom Boosting your Trap...\e[0m"
 echo "Depositing Holesky ETH to activate your trap."
 read -p "Enter the amount of Holesky ETH to deposit for Bloom Boost: " ETH_AMOUNT
-drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT"
+drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT" --rpc-url "$ETH_RPC_URL"
 
 # Step 6: Fetch Blocks
 echo -e "\n\e[1;33mStep 6: Fetching Blocks...\e[0m"
 echo "Testing trap functionality with a dry run."
-drosera dryrun
+drosera dryrun --rpc-url "$ETH_RPC_URL"
 
 # Step 7: Whitelist Operator
 echo -e "\n\e[1;33mStep 7: Whitelisting Operator...\e[0m"
 echo "Configuring your trap to allow your operator."
 echo "private_trap = true" >> drosera.toml
 echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
-DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --rpc-url "$ETH_RPC_URL"
 
 # Step 8: Install Operator CLI
 echo -e "\n\e[1;33mStep 8: Installing Operator CLI...\e[0m"
@@ -154,6 +155,7 @@ cd Drosera-Network
 cp .env.example .env
 sed -i "s/your_evm_private_key/$EVM_PRIVATE_KEY/g" .env
 sed -i "s/your_vps_public_ip/$VPS_IP/g" .env
+sed -i "s|https://ethereum-holesky-rpc.publicnode.com|$ETH_RPC_URL|g" docker-compose.yml
 docker compose up -d
 
 # Step 13: Opt-in Trap
