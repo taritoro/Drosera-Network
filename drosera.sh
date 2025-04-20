@@ -118,12 +118,12 @@ echo "Trap deployed! Address: $TRAP_ADDRESS"
 echo -e "\n\e[1;33mStep 5: Bloom Boosting your Trap...\e[0m"
 echo "Depositing Holesky ETH to activate your trap."
 read -p "Enter the amount of Holesky ETH to deposit for Bloom Boost: " ETH_AMOUNT
-drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT" --rpc-url "$ETH_RPC_URL"
+drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT"
 
 # Step 6: Fetch Blocks
 echo -e "\n\e[1;33mStep 6: Fetching Blocks...\e[0m"
 echo "Testing trap functionality with a dry run."
-drosera dryrun --rpc-url "$ETH_RPC_URL"
+drosera dryrun
 
 # Step 7: Whitelist Operator
 echo -e "\n\e[1;33mStep 7: Whitelisting Operator...\e[0m"
