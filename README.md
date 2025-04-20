@@ -71,6 +71,8 @@ foundryup
 **Bun:**
 ```
 curl -fsSL https://bun.sh/install | bash
+
+source /root/.bashrc
 ```
 
 ---
@@ -94,6 +96,9 @@ forge init -t drosera-network/trap-foundry-template
 **Compile Trap**:
 ```bash
 curl -fsSL https://bun.sh/install | bash
+
+source /root/.bashrc
+
 bun install
 ```
 ```bash
