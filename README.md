@@ -254,8 +254,7 @@ docker compose up -d
 
 ### 6-1-3: Check health
 ```
-cd Drosera-Network
-docker compose logs -f
+docker logs -f drosera-node
 ```
 
 ![image](https://github.com/user-attachments/assets/2ec4d181-ac60-4702-b4f4-9722ef275b50)
