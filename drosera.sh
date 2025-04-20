@@ -37,8 +37,8 @@ echo "Public address derived: $EVM_PUBLIC_ADDRESS"
 # Prompt for Testnet Holesky Ethereum RPC immediately after EVM private key
 read -p "Enter your Testnet Holesky Ethereum RPC, Grab one from https://dashboard.alchemy.com/ (or press Enter to use default): " ETH_RPC_URL
 if [ -z "$ETH_RPC_URL" ] || ! curl --output /dev/null --silent --head --fail "$ETH_RPC_URL"; then
-    echo "Invalid RPC URL or skipped. Using default RPC: https://holesky.drpc.org"
-    ETH_RPC_URL="https://holesky.drpc.org"
+    echo "Invalid RPC URL or skipped. Using default RPC: https://ethereum-holesky-rpc.publicnode.com"
+    ETH_RPC_URL="https://ethereum-holesky-rpc.publicnode.com"
 else
     echo "Using provided RPC URL: $ETH_RPC_URL"
 fi
