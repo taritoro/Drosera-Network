@@ -110,7 +110,7 @@ git config --global user.name "DroseraUser"
 forge init -t drosera-network/trap-foundry-template
 bun install
 forge build
-DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
 TRAP_ADDRESS=$(grep 'address =' drosera.toml | awk '{print $3}')
 echo "Trap deployed! Address: $TRAP_ADDRESS"
 
@@ -118,19 +118,19 @@ echo "Trap deployed! Address: $TRAP_ADDRESS"
 echo -e "\n\e[1;33mStep 5: Bloom Boosting your Trap...\e[0m"
 echo "Depositing Holesky ETH to activate your trap."
 read -p "Enter the amount of Holesky ETH to deposit for Bloom Boost: " ETH_AMOUNT
-drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT"
+drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT" --eth-rpc-url "$ETH_RPC_URL"
 
 # Step 6: Fetch Blocks
 echo -e "\n\e[1;33mStep 6: Fetching Blocks...\e[0m"
 echo "Testing trap functionality with a dry run."
-drosera dryrun
+drosera dryrun --eth-rpc-url "$ETH_RPC_URL"
 
 # Step 7: Whitelist Operator
 echo -e "\n\e[1;33mStep 7: Whitelisting Operator...\e[0m"
 echo "Configuring your trap to allow your operator."
 echo "private_trap = true" >> drosera.toml
 echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
-DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
 
 # Step 8: Install Operator CLI
 echo -e "\n\e[1;33mStep 8: Installing Operator CLI...\e[0m"
