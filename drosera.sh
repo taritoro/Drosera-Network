@@ -110,7 +110,7 @@ git config --global user.name "DroseraUser"
 forge init -t drosera-network/trap-foundry-template
 bun install
 forge build
-echo "ofc" | DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
 TRAP_ADDRESS=$(grep 'address =' drosera.toml | awk '{print $3}')
 echo "Trap deployed! Address: $TRAP_ADDRESS"
 
@@ -139,7 +139,7 @@ if grep -q "whitelist" drosera.toml; then
 else
     echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
 fi
-echo "ofc" | DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
+DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
 # Step 8: Install Operator CLI
 echo -e "\n\e[1;33mStep 8: Installing Operator CLI...\e[0m"
 echo "This CLI will manage your operator node."
