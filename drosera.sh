@@ -37,8 +37,8 @@ echo "Public address derived: $EVM_PUBLIC_ADDRESS"
 # Prompt for Testnet Holesky Ethereum RPC immediately after EVM private key
 read -p "Enter your Testnet Holesky Ethereum RPC, Grab one from https://dashboard.alchemy.com/ (or press Enter to use default): " ETH_RPC_URL
 if [ -z "$ETH_RPC_URL" ] || ! curl --output /dev/null --silent --head --fail "$ETH_RPC_URL"; then
-    echo "Invalid RPC URL or skipped. Using default RPC: https://ethereum-holesky-rpc.publicnode.com"
-    ETH_RPC_URL="https://ethereum-holesky-rpc.publicnode.com"
+    echo "Invalid RPC URL or skipped. Using default RPC: https://holesky.drpc.org"
+    ETH_RPC_URL="https://holesky.drpc.org"
 else
     echo "Using provided RPC URL: $ETH_RPC_URL"
 fi
@@ -119,7 +119,6 @@ echo -e "\n\e[1;33mStep 5: Bloom Boosting your Trap...\e[0m"
 echo "Depositing Holesky ETH to activate your trap."
 read -p "Enter the amount of Holesky ETH to deposit for Bloom Boost: " ETH_AMOUNT
 drosera bloomboost --trap-address "$TRAP_ADDRESS" --eth-amount "$ETH_AMOUNT" --eth-rpc-url "$ETH_RPC_URL"
-
 # Step 6: Fetch Blocks
 echo -e "\n\e[1;33mStep 6: Fetching Blocks...\e[0m"
 echo "Testing trap functionality with a dry run."
@@ -141,7 +140,6 @@ else
     echo "whitelist = [\"$EVM_PUBLIC_ADDRESS\"]" >> drosera.toml
 fi
 echo "ofc" | DROSERA_PRIVATE_KEY=$EVM_PRIVATE_KEY drosera apply --eth-rpc-url "$ETH_RPC_URL"
-
 # Step 8: Install Operator CLI
 echo -e "\n\e[1;33mStep 8: Installing Operator CLI...\e[0m"
 echo "This CLI will manage your operator node."
@@ -178,7 +176,7 @@ cd Drosera-Network
 cp .env.example .env
 sed -i "s/your_evm_private_key/$EVM_PRIVATE_KEY/g" .env
 sed -i "s/your_vps_public_ip/$VPS_IP/g" .env
-sed -i "s|https://ethereum-holesky-rpc.publicnode.com|$ETH_RPC_URL|g" docker-compose.yml
+sed -i "s|https://ethereum-holesky-rpc.publicnode.com|$ETH_RPC_URL|g" docker-compose.yaml
 docker compose up -d
 
 # Step 13: Opt-in Trap
