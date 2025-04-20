@@ -77,14 +77,27 @@ sudo docker run hello-world
 # Step 3: Install Drosera CLI, Foundry CLI, and Bun
 echo -e "\n\e[1;33mStep 3: Installing Drosera CLI, Foundry CLI, and Bun...\e[0m"
 echo "These tools are needed to deploy and manage your trap."
+
+# Install Drosera CLI
 curl -L https://app.drosera.io/install | bash
-source /root/.bashrc
+# Add Drosera CLI to PATH (assuming it installs to ~/.drosera/bin)
+export PATH=$PATH:~/.drosera/bin
+# Verify installation
 droseraup
+
+# Install Foundry CLI
 curl -L https://foundry.paradigm.xyz | bash
-source /root/.bashrc
+# Add Foundry CLI to PATH (assuming it installs to ~/.foundry/bin)
+export PATH=$PATH:~/.foundry/bin
+# Verify installation
 foundryup
+
+# Install Bun
 curl -fsSL https://bun.sh/install | bash
-source /root/.bashrc
+# Add Bun to PATH (assuming it installs to ~/.bun/bin)
+export PATH=$PATH:~/.bun/bin
+# Verify installation
+bun --version
 
 # Step 4: Deploy Contract & Trap
 echo -e "\n\e[1;33mStep 4: Deploying Contract & Trap...\e[0m"
